@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Heri & Furoh</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Marcellus&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gold: #c5a059;
+            --accent-gold: #e8dcc4;
+            --dark-grey: #333333;
+            --light-grey: #f0f2f5;
+            --white: #ffffff;
+            --danger: #ef4444;
+            --shadow-card: 0 20px 40px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light-grey);
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(197, 160, 89, 0.07) 0px, transparent 50%),
+                url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23c5a059" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+            margin: 0;
+            padding: 40px 10px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-family: 'Marcellus', serif;
+            color: var(--primary-gold);
+            margin: 0;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 30px 20px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            color: var(--primary-gold);
+            text-transform: uppercase;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+        }
+
+        .btn-contact {
+            background: var(--white);
+            border: 2px solid var(--primary-gold);
+            border-radius: 12px;
+            padding: 0 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .btn-contact:hover {
+            background: var(--accent-gold);
+        }
+
+        .btn-send {
+            background-color: var(--primary-gold);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
+        }
+
+        .history-item {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .guest-name { font-weight: 600; display: block; }
+        .guest-time { font-size: 0.75rem; color: #999; }
+        
+        .delete-btn {
+            color: var(--danger);
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 5px;
+        }
+
+        .badge-info {
+            background: #e1f5fe;
+            color: #0288d1;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <div class="header">
+            <h1>Heri & Furoh</h1>
+            <p style="color: #888; letter-spacing: 1px; font-size: 0.8rem;">WEDDING INVITER</p>
+        </div>
+
+        <div id="debugMsg" class="badge-info"></div>
+
+        <div class="card">
+            <div class="form-group">
+                <label>Nama Tamu</label>
+                <div class="input-wrapper">
+                    <input type="text" id="guestName" placeholder="Masukkan nama tamu...">
+                    <button class="btn-contact" id="btnContact" onclick="pickContact()" title="Pilih dari Kontak HP">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>WhatsApp</label>
+                <input type="tel" id="guestPhone" placeholder="62812xxx">
+            </div>
+            
+            <button class="btn-send" onclick="sendInvitation()">
+                KIRIM UNDANGAN
+            </button>
+        </div>
+
+        <div class="history-section">
+            <h3 style="font-family: 'Marcellus'; font-weight: 400;">Terbaru</h3>
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = "https://sifura-undangan.github.io/wedding-of-heri-furoh/"; 
+        let sentGuests = JSON.parse(localStorage.getItem('heri_furoh_history')) || [];
+
+        window.onload = () => {
+            const isSupported = ('contacts' in navigator && 'ContactsManager' in window);
+            const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+            const debug = document.getElementById('debugMsg');
+
+            if (!isSupported) {
+                debug.innerHTML = "ℹ️ Browser Anda tidak mendukung fitur Kontak. Silakan ketik nama secara manual.";
+                debug.style.display = "block";
+            } else if (!isSecure) {
+                debug.innerHTML = "⚠️ Fitur Kontak hanya aktif di koneksi aman (HTTPS).";
+                debug.style.display = "block";
+            }
+            renderHistory();
+        };
+
+        async function pickContact() {
+            try {
+                const props = ['name', 'tel'];
+                const opts = { multiple: false };
+                const contacts = await navigator.contacts.select(props, opts);
+                
+                if (contacts.length > 0) {
+                    const contact = contacts[0];
+                    if (contact.name && contact.name[0]) {
+                        document.getElementById('guestName').value = contact.name[0];
+                    }
+                    if (contact.tel && contact.tel[0]) {
+                        let phone = contact.tel[0].replace(/[^0-9]/g, '');
+                        if (phone.startsWith('0')) phone = '62' + phone.slice(1);
+                        document.getElementById('guestPhone').value = phone;
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function sendInvitation() {
+            const name = document.getElementById('guestName').value.trim();
+            let phone = document.getElementById('guestPhone').value.trim().replace(/[^0-9]/g, '');
+
+            if (!name) return alert("Nama tidak boleh kosong!");
+
+            // Perbaikan Utama: Menggunakan URLSearchParams atau Template Literal dengan encodeURIComponent penuh
+            const inviteLink = `${BASE_URL}/?to=${encodeURIComponent(name)}`;
+            
+            const rawText = `*Assalamu’alaikum Warahmatullahi Wabarakatuh.*
+
+Tanpa mengurangi rasa hormat, perkenankan kami mengundang *${name}* untuk hadir di pernikahan kami:
+
+*Heri Ariyanto & Siti Masfuroh*
+
+Info Lengkap:
+🏛️ ${inviteLink}
+
+Terima kasih.`;
+
+            const encodedText = encodeURIComponent(rawText);
+
+            if (phone.startsWith('0')) phone = '62' + phone.slice(1);
+            
+            // Generate URL WhatsApp
+            const waUrl = phone 
+                ? `https://api.whatsapp.com/send?phone=${phone}&text=${encodedText}` 
+                : `https://api.whatsapp.com/send?text=${encodedText}`;
+                
+            window.open(waUrl, '_blank');
+
+            // Simpan Riwayat
+            const time = new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+            sentGuests.push({ name, date: time });
+            localStorage.setItem('heri_furoh_history', JSON.stringify(sentGuests));
+            
+            document.getElementById('guestName').value = "";
+            document.getElementById('guestPhone').value = "";
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = sentGuests.slice(-10).reverse().map((g, i) => `
+                <div class="history-item">
+                    <div>
+                        <span class="guest-name">${g.name}</span>
+                        <span class="guest-time">${g.date}</span>
+                    </div>
+                    <span class="delete-btn" onclick="deleteItem(${sentGuests.length - 1 - i})">&times;</span>
+                </div>
+            `).join('');
+        }
+
+        function deleteItem(idx) {
+            sentGuests.splice(idx, 1);
+            localStorage.setItem('heri_furoh_history', JSON.stringify(sentGuests));
+            renderHistory();
+        }
+    </script>
+</body>
+</html>
+
